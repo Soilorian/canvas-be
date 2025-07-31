@@ -1,15 +1,6 @@
 # Canvas Backend - بک‌اند Canvas
 
-یک اپلیکیشن بک‌اند Spring Boot برای مدیریت حالت‌های نقاشی با اشکال مختلف.
-
-## ویژگی‌ها
-
-- ذخیره حالت‌های نقاشی با اشکال در پایگاه داده PostgreSQL
-- بازیابی حالت‌های نقاشی بر اساس نام
-- API های RESTful
-- اعتبارسنجی ورودی
-- مدیریت خطا
-- ذخیره‌سازی پایگاه داده با JPA/Hibernate
+یک اپلیکیشن بک‌اند Spring Boot برای ذخیره‌ی نقاشی‌ها
 
 ## پیش‌نیازها
 
@@ -24,8 +15,8 @@
 - جزئیات اتصال پایگاه داده را در فایل `src/main/resources/application.properties` به‌روزرسانی کنید:
   ```properties
   spring.datasource.url=jdbc:postgresql://localhost:5432/canvas_db
-  spring.datasource.username=نام_کاربری_شما
-  spring.datasource.password=رمز_عبور_شما
+  spring.datasource.username={{username}}
+  spring.datasource.password={{password}}
   ```
 
 ### ۲. ساخت و اجرا
@@ -40,14 +31,14 @@
 
 ```
 src/main/java/org/example/canvasbe/
-├── CanvasBeApplication.java          # کلاس اصلی اپلیکیشن
-├── controller/                       # کنترلرهای REST API
-├── service/                          # لایه سرویس و منطق کسب‌وکار
-├── repository/                       # لایه دسترسی به داده
-├── entity/                          # موجودیت‌های JPA
-├── dto/                             # اشیاء انتقال داده
-├── exception/                       # مدیریت استثناها
-└── config/                          # تنظیمات اپلیکیشن
+├── CanvasBeApplication.java         
+├── controller/                       
+├── service/                          
+├── repository/                      
+├── entity/                          
+├── dto/                             
+├── exception/                       
+└── config/                          
 ```
 
 ### توضیح لایه‌ها:
@@ -55,10 +46,9 @@ src/main/java/org/example/canvasbe/
 #### ۱. Controller Layer (لایه کنترلر)
 - مسئول مدیریت درخواست‌ها و پاسخ‌های HTTP
 - تعریف endpoint های REST API
-- اعتبارسنجی ورودی‌ها
 
 #### ۲. Service Layer (لایه سرویس)
-- شامل منطق کسب‌وکار اصلی
+- شامل منطق اصلی
 - پردازش داده‌ها قبل از ذخیره‌سازی
 - مدیریت تراکنش‌ها
 
@@ -77,15 +67,15 @@ src/main/java/org/example/canvasbe/
 ## API Endpoints
 
 ### ذخیره حالت نقاشی
-- **POST** `/api/drawing-states`
+- **POST** `/api/canvas/save`
 - **Content-Type**: `application/json`
 - **بدنه درخواست**:
   ```json
   {
-    "name": "نقاشی-من",
+    "name": "drawing",
     "shapes": [
       {
-        "id": "شکل-۱",
+        "id": "id",
         "type": "SQUARE",
         "x": 100.0,
         "y": 100.0,
@@ -99,23 +89,8 @@ src/main/java/org/example/canvasbe/
   ```
 
 ### دریافت حالت نقاشی
-- **GET** `/api/drawing-states/{name}`
+- **GET** `/api/canvas/load?canvasName={name}`
 - **پاسخ**: حالت نقاشی با نام مشخص شده را برمی‌گرداند
-
-## مدل‌های داده
-
-### انواع اشکال
-- `SQUARE` - مربع
-- `CIRCLE` - دایره
-- `TRIANGLE` - مثلث
-- `DIAMOND` - لوزی
-
-### قوانین اعتبارسنجی
-- تمام ویژگی‌های شکل الزامی هستند
-- مختصات X و Y باید غیرمنفی باشند
-- عرض و ارتفاع باید مثبت باشند (> 0.1)
-- نام حالت نقاشی الزامی است و نمی‌تواند خالی باشد
-- لیست اشکال الزامی است
 
 ## معماری
 
@@ -148,30 +123,3 @@ src/main/java/org/example/canvasbe/
 اپلیکیشن به طور خودکار جداول زیر را ایجاد می‌کند:
 - `drawing_states`: ذخیره اطلاعات حالت نقاشی
 - `shapes`: ذخیره اطلاعات اشکال با کلید خارجی به حالت‌های نقاشی
-
-## توسعه
-
-### اجرای تست‌ها
-```bash
-./gradlew test
-```
-
-### ساخت اپلیکیشن
-```bash
-./gradlew build
-```
-
-### وابستگی‌های اصلی
-- Spring Boot 3.5.4
-- Spring Data JPA
-- PostgreSQL Driver
-- Jackson (برای JSON)
-- H2 Database (برای تست‌ها)
-
-## نکات مهم
-
-- این پروژه از Java 21 استفاده می‌کند
-- از Gradle برای مدیریت وابستگی‌ها استفاده می‌شود
-- پایگاه داده PostgreSQL برای محیط تولید استفاده می‌شود
-- پایگاه داده H2 برای تست‌ها استفاده می‌شود
-- تمام endpoint ها از JSON برای تبادل داده استفاده می‌کنند 
