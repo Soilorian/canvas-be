@@ -1,53 +1,91 @@
-# Canvas Backend
+# Canvas Backend - بک‌اند Canvas
 
-A Spring Boot backend application for managing drawing states with shapes.
+یک اپلیکیشن بک‌اند Spring Boot برای مدیریت حالت‌های نقاشی با اشکال مختلف.
 
-## Features
+## ویژگی‌ها
 
-- Save drawing states with shapes to PostgreSQL database
-- Retrieve drawing states by name
-- RESTful API endpoints
-- Input validation
-- Error handling
-- Database persistence with JPA/Hibernate
+- ذخیره حالت‌های نقاشی با اشکال در پایگاه داده PostgreSQL
+- بازیابی حالت‌های نقاشی بر اساس نام
+- API های RESTful
+- اعتبارسنجی ورودی
+- مدیریت خطا
+- ذخیره‌سازی پایگاه داده با JPA/Hibernate
 
-## Prerequisites
+## پیش‌نیازها
 
 - Java 21
-- PostgreSQL database
+- پایگاه داده PostgreSQL
 - Gradle
 
-## Setup
+## راه‌اندازی
 
-1. **Database Setup**
-   - Create a PostgreSQL database named `canvas_db`
-   - Update database connection details in `src/main/resources/application.properties`:
-     ```properties
-     spring.datasource.url=jdbc:postgresql://localhost:5432/canvas_db
-     spring.datasource.username=your_username
-     spring.datasource.password=your_password
-     ```
+### ۱. راه‌اندازی پایگاه داده
+- یک پایگاه داده PostgreSQL با نام `canvas_db` ایجاد کنید
+- جزئیات اتصال پایگاه داده را در فایل `src/main/resources/application.properties` به‌روزرسانی کنید:
+  ```properties
+  spring.datasource.url=jdbc:postgresql://localhost:5432/canvas_db
+  spring.datasource.username=نام_کاربری_شما
+  spring.datasource.password=رمز_عبور_شما
+  ```
 
-2. **Build and Run**
-   ```bash
-   ./gradlew build
-   ./gradlew bootRun
-   ```
+### ۲. ساخت و اجرا
+```bash
+./gradlew build
+./gradlew bootRun
+```
 
-   The application will start on `http://localhost:8080`
+اپلیکیشن روی آدرس `http://localhost:8080` شروع خواهد شد.
+
+## ساختار پروژه
+
+```
+src/main/java/org/example/canvasbe/
+├── CanvasBeApplication.java          # کلاس اصلی اپلیکیشن
+├── controller/                       # کنترلرهای REST API
+├── service/                          # لایه سرویس و منطق کسب‌وکار
+├── repository/                       # لایه دسترسی به داده
+├── entity/                          # موجودیت‌های JPA
+├── dto/                             # اشیاء انتقال داده
+├── exception/                       # مدیریت استثناها
+└── config/                          # تنظیمات اپلیکیشن
+```
+
+### توضیح لایه‌ها:
+
+#### ۱. Controller Layer (لایه کنترلر)
+- مسئول مدیریت درخواست‌ها و پاسخ‌های HTTP
+- تعریف endpoint های REST API
+- اعتبارسنجی ورودی‌ها
+
+#### ۲. Service Layer (لایه سرویس)
+- شامل منطق کسب‌وکار اصلی
+- پردازش داده‌ها قبل از ذخیره‌سازی
+- مدیریت تراکنش‌ها
+
+#### ۳. Repository Layer (لایه مخزن)
+- لایه دسترسی به داده با استفاده از Spring Data JPA
+- عملیات CRUD روی پایگاه داده
+
+#### ۴. Entity Layer (لایه موجودیت)
+- موجودیت‌های JPA برای نگاشت پایگاه داده
+- تعریف روابط بین جداول
+
+#### ۵. DTO Layer (لایه انتقال داده)
+- اشیاء انتقال داده برای ارتباط API
+- جداسازی مدل‌های داخلی از API
 
 ## API Endpoints
 
-### Save Drawing State
+### ذخیره حالت نقاشی
 - **POST** `/api/drawing-states`
 - **Content-Type**: `application/json`
-- **Request Body**:
+- **بدنه درخواست**:
   ```json
   {
-    "name": "my-drawing",
+    "name": "نقاشی-من",
     "shapes": [
       {
-        "id": "shape-1",
+        "id": "شکل-۱",
         "type": "SQUARE",
         "x": 100.0,
         "y": 100.0,
@@ -60,59 +98,80 @@ A Spring Boot backend application for managing drawing states with shapes.
   }
   ```
 
-### Get Drawing State
+### دریافت حالت نقاشی
 - **GET** `/api/drawing-states/{name}`
-- **Response**: Returns the drawing state with the specified name
+- **پاسخ**: حالت نقاشی با نام مشخص شده را برمی‌گرداند
 
-## Data Models
+## مدل‌های داده
 
-### Shape Types
-- `SQUARE`
-- `CIRCLE`
-- `TRIANGLE`
-- `DIAMOND`
+### انواع اشکال
+- `SQUARE` - مربع
+- `CIRCLE` - دایره
+- `TRIANGLE` - مثلث
+- `DIAMOND` - لوزی
 
-### Validation Rules
-- All shape properties are required
-- X and Y coordinates must be non-negative
-- Width and height must be positive (> 0.1)
-- Drawing state name is required and cannot be blank
-- Shapes list is required
+### قوانین اعتبارسنجی
+- تمام ویژگی‌های شکل الزامی هستند
+- مختصات X و Y باید غیرمنفی باشند
+- عرض و ارتفاع باید مثبت باشند (> 0.1)
+- نام حالت نقاشی الزامی است و نمی‌تواند خالی باشد
+- لیست اشکال الزامی است
 
-## Architecture
+## معماری
 
-The application follows a layered architecture:
+این اپلیکیشن از معماری لایه‌ای پیروی می‌کند:
 
-- **Controller Layer**: Handles HTTP requests and responses
-- **Service Layer**: Contains business logic
-- **Repository Layer**: Data access layer using Spring Data JPA
-- **Entity Layer**: JPA entities for database mapping
-- **DTO Layer**: Data Transfer Objects for API communication
+```
+┌─────────────────┐
+│   Controller    │ ← لایه کنترلر (مدیریت HTTP)
+├─────────────────┤
+│     Service     │ ← لایه سرویس (منطق کسب‌وکار)
+├─────────────────┤
+│   Repository    │ ← لایه مخزن (دسترسی به داده)
+├─────────────────┤
+│     Entity      │ ← لایه موجودیت (نگاشت پایگاه داده)
+└─────────────────┘
+```
 
-## Error Handling
+## مدیریت خطا
 
-The application provides comprehensive error handling:
+اپلیکیشن مدیریت خطای جامعی ارائه می‌دهد:
 
-- **404**: Drawing state not found
-- **400**: Validation errors
-- **500**: Internal server errors
+- **۴۰۴**: حالت نقاشی یافت نشد
+- **۴۰۰**: خطاهای اعتبارسنجی
+- **۵۰۰**: خطاهای داخلی سرور
 
-All errors return structured JSON responses with appropriate HTTP status codes.
+تمام خطاها پاسخ‌های JSON ساختاریافته با کدهای وضعیت HTTP مناسب برمی‌گردانند.
 
-## Database Schema
+## طرح پایگاه داده
 
-The application automatically creates the following tables:
-- `drawing_states`: Stores drawing state information
-- `shapes`: Stores shape information with foreign key to drawing states
+اپلیکیشن به طور خودکار جداول زیر را ایجاد می‌کند:
+- `drawing_states`: ذخیره اطلاعات حالت نقاشی
+- `shapes`: ذخیره اطلاعات اشکال با کلید خارجی به حالت‌های نقاشی
 
-## Development
+## توسعه
 
-To run tests:
+### اجرای تست‌ها
 ```bash
 ./gradlew test
 ```
 
-To build the application:
+### ساخت اپلیکیشن
 ```bash
 ./gradlew build
-``` 
+```
+
+### وابستگی‌های اصلی
+- Spring Boot 3.5.4
+- Spring Data JPA
+- PostgreSQL Driver
+- Jackson (برای JSON)
+- H2 Database (برای تست‌ها)
+
+## نکات مهم
+
+- این پروژه از Java 21 استفاده می‌کند
+- از Gradle برای مدیریت وابستگی‌ها استفاده می‌شود
+- پایگاه داده PostgreSQL برای محیط تولید استفاده می‌شود
+- پایگاه داده H2 برای تست‌ها استفاده می‌شود
+- تمام endpoint ها از JSON برای تبادل داده استفاده می‌کنند 
