@@ -7,7 +7,4 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @Configuration
 @EnableJpaRepositories(basePackages = "org.example.canvasbe.repository")
 @EnableTransactionManagement
-public class DatabaseConfig {
-    // Configuration is handled through application.properties
-    // This class enables JPA repositories and transaction management
-} 
+public class DatabaseConfig {}

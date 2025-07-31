@@ -27,13 +27,10 @@ public class DrawingStateServiceImpl implements DrawingStateService {
     
     @Override
     public SavedDrawingStateDto saveDrawingState(SavedDrawingStateDto savedDrawingStateDto) {
-        // Convert DTO to entity
         DrawingState drawingState = convertToEntity(savedDrawingStateDto);
         
-        // Save to database
         DrawingState savedDrawingState = drawingStateRepository.save(drawingState);
         
-        // Convert back to DTO and return
         return convertToDto(savedDrawingState);
     }
     
@@ -44,10 +41,7 @@ public class DrawingStateServiceImpl implements DrawingStateService {
         
         return convertToDto(drawingState);
     }
-    
-    /**
-     * Convert DrawingStateDto to DrawingState entity
-     */
+
     private DrawingState convertToEntity(SavedDrawingStateDto dto) {
         DrawingState entity = new DrawingState(dto.getName());
         
@@ -60,10 +54,7 @@ public class DrawingStateServiceImpl implements DrawingStateService {
         
         return entity;
     }
-    
-    /**
-     * Convert ShapeDto to Shape entity
-     */
+
     private Shape convertShapeToEntity(ShapeDto dto) {
         Shape shape = new Shape();
         shape.setId(dto.getId());
@@ -76,10 +67,7 @@ public class DrawingStateServiceImpl implements DrawingStateService {
         shape.setColor(dto.getColor());
         return shape;
     }
-    
-    /**
-     * Convert DrawingState entity to DrawingStateDto
-     */
+
     private SavedDrawingStateDto convertToDto(DrawingState entity) {
         List<ShapeDto> shapeDtos = entity.getShapes().stream()
                 .map(this::convertShapeToDto)
@@ -87,10 +75,7 @@ public class DrawingStateServiceImpl implements DrawingStateService {
         
         return new SavedDrawingStateDto(entity.getName(), shapeDtos);
     }
-    
-    /**
-     * Convert Shape entity to ShapeDto
-     */
+
     private ShapeDto convertShapeToDto(Shape entity) {
         return new ShapeDto(
                 entity.getId(),
